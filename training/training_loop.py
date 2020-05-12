@@ -53,12 +53,31 @@ def process_reals(x, lod, mirror_augment, drange_data, drange_net):
 # Evaluate time-varying training parameters.
 
 def training_schedule(
+# =============================================================================
+#     cur_nimg,
+#     training_set,
+#     num_gpus,
+#     lod_initial_resolution  = 4,        # Image resolution used at the beginning.
+#     lod_training_kimg       = 600,      # Thousands of real images to show before doubling the resolution.
+#     lod_transition_kimg     = 600,      # Thousands of real images to show when fading in new layers.
+#     minibatch_base          = 16,       # Maximum minibatch size, divided evenly among GPUs.
+#     minibatch_dict          = {},       # Resolution-specific overrides.
+#     max_minibatch_per_gpu   = {},       # Resolution-specific maximum minibatch size per GPU.
+#     G_lrate_base            = 0.001,    # Learning rate for the generator.
+#     G_lrate_dict            = {},       # Resolution-specific overrides.
+#     D_lrate_base            = 0.001,    # Learning rate for the discriminator.
+#     D_lrate_dict            = {},       # Resolution-specific overrides.
+#     lrate_rampup_kimg       = 0,        # Duration of learning rate ramp-up.
+#     tick_kimg_base          = 160,      # Default interval of progress snapshots.
+#     tick_kimg_dict          = {4: 160, 8:140, 16:120, 32:100, 64:80, 128:60, 256:40, 512:30, 1024:20}): # Resolution-specific overrides.
+# =============================================================================
+   #changed config
     cur_nimg,
     training_set,
     num_gpus,
     lod_initial_resolution  = 4,        # Image resolution used at the beginning.
-    lod_training_kimg       = 600,      # Thousands of real images to show before doubling the resolution.
-    lod_transition_kimg     = 600,      # Thousands of real images to show when fading in new layers.
+    lod_training_kimg       = 60,      # Thousands of real images to show before doubling the resolution.
+    lod_transition_kimg     = 60,      # Thousands of real images to show when fading in new layers.
     minibatch_base          = 16,       # Maximum minibatch size, divided evenly among GPUs.
     minibatch_dict          = {},       # Resolution-specific overrides.
     max_minibatch_per_gpu   = {},       # Resolution-specific maximum minibatch size per GPU.
@@ -67,9 +86,9 @@ def training_schedule(
     D_lrate_base            = 0.001,    # Learning rate for the discriminator.
     D_lrate_dict            = {},       # Resolution-specific overrides.
     lrate_rampup_kimg       = 0,        # Duration of learning rate ramp-up.
-    tick_kimg_base          = 160,      # Default interval of progress snapshots.
-    tick_kimg_dict          = {4: 160, 8:140, 16:120, 32:100, 64:80, 128:60, 256:40, 512:30, 1024:20}): # Resolution-specific overrides.
-
+    tick_kimg_base          = 16,      # Default interval of progress snapshots.
+    tick_kimg_dict          = {4: 16, 8:14, 16:12, 32:10, 64:8, 128:6, 256:4, 512:3, 1024:2}): # Resolution-specific overrides.
+    
     # Initialize result dict.
     s = dnnlib.EasyDict()
     s.kimg = cur_nimg / 1000.0
@@ -204,7 +223,7 @@ def training_loop(
         summary_log.add_graph(tf.get_default_graph())
     if save_weight_histograms:
         G.setup_weight_histograms(); D.setup_weight_histograms()
-    metrics = metric_base.MetricGroup(metric_arg_list)
+    # metrics = metric_base.MetricGroup(metric_arg_list)
 
     print('Training...\n')
     ctx.update('', cur_epoch=resume_kimg, max_epoch=total_kimg)
@@ -261,10 +280,10 @@ def training_loop(
             if cur_tick % network_snapshot_ticks == 0 or done or cur_tick == 1:
                 pkl = os.path.join(submit_config.run_dir, 'network-snapshot-%06d.pkl' % (cur_nimg // 1000))
                 misc.save_pkl((G, D, Gs), pkl)
-                metrics.run(pkl, run_dir=submit_config.run_dir, num_gpus=submit_config.num_gpus, tf_config=tf_config)
+                # metrics.run(pkl, run_dir=submit_config.run_dir, num_gpus=submit_config.num_gpus, tf_config=tf_config)
 
             # Update summaries and RunContext.
-            metrics.update_autosummaries()
+            # metrics.update_autosummaries()
             tflib.autosummary.save_summaries(summary_log, cur_nimg)
             ctx.update('%.2f' % sched.lod, cur_epoch=cur_nimg // 1000, max_epoch=total_kimg)
             maintenance_time = ctx.get_last_update_interval() - tick_time
