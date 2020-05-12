@@ -76,8 +76,8 @@ def training_schedule(
     training_set,
     num_gpus,
     lod_initial_resolution  = 4,        # Image resolution used at the beginning.
-    lod_training_kimg       = 60,      # Thousands of real images to show before doubling the resolution.
-    lod_transition_kimg     = 60,      # Thousands of real images to show when fading in new layers.
+    lod_training_kimg       = 10,      # Thousands of real images to show before doubling the resolution.
+    lod_transition_kimg     = 10,      # Thousands of real images to show when fading in new layers.
     minibatch_base          = 16,       # Maximum minibatch size, divided evenly among GPUs.
     minibatch_dict          = {},       # Resolution-specific overrides.
     max_minibatch_per_gpu   = {},       # Resolution-specific maximum minibatch size per GPU.
