@@ -18,7 +18,7 @@ from metrics import metric_base
 # %load_ext tensorboard
 # %tensorboard --logdir 00010-sgan-ck0-1gpu
 # =============================================================================
-
+#run dataset_tool.py create_from_images datasets/ck11 data/ck11
 #----------------------------------------------------------------------------
 # Official training configs for StyleGAN, targeted mainly for FFHQ.
 
@@ -39,7 +39,7 @@ if 1:
     tf_config     = {'rnd.np_random_seed': 1000}                                           # Options for tflib.init_tf().
 
     # Dataset.
-    desc += '-ck0';     dataset = EasyDict(tfrecord_dir='ck0', resolution=128); train.mirror_augment = False
+    desc += '-ck11';     dataset = EasyDict(tfrecord_dir='ck11', resolution=128); train.mirror_augment = False
     #desc += '-ffhq';     dataset = EasyDict(tfrecord_dir='ffhq');                 train.mirror_augment = True
     #desc += '-ffhq512';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=512); train.mirror_augment = True
     #desc += '-ffhq256';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=256); train.mirror_augment = True
