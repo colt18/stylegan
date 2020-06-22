@@ -18,7 +18,7 @@ from metrics import metric_base
 # %load_ext tensorboard
 # %tensorboard --logdir 00010-sgan-ck0-1gpu
 # =============================================================================
-#run dataset_tool.py create_from_images datasets/ck11 data/ck11
+#%run dataset_tool.py create_from_images datasets/ck11 data/ck11
 #----------------------------------------------------------------------------
 # Official training configs for StyleGAN, targeted mainly for FFHQ.
 
@@ -39,7 +39,7 @@ if 1:
     tf_config     = {'rnd.np_random_seed': 1000}                                           # Options for tflib.init_tf().
 
     # Dataset.
-    desc += '-ck11';     dataset = EasyDict(tfrecord_dir='ck11', resolution=128); train.mirror_augment = False
+    desc += '-ck31ex2';     dataset = EasyDict(tfrecord_dir='ck31ex2', resolution=128); train.mirror_augment = False
     #desc += '-ffhq';     dataset = EasyDict(tfrecord_dir='ffhq');                 train.mirror_augment = True
     #desc += '-ffhq512';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=512); train.mirror_augment = True
     #desc += '-ffhq256';  dataset = EasyDict(tfrecord_dir='ffhq', resolution=256); train.mirror_augment = True
@@ -49,7 +49,7 @@ if 1:
     #desc += '-cat';      dataset = EasyDict(tfrecord_dir='lsun-cat-full');        train.mirror_augment = False
 
     # Number of GPUs.
-    desc += '-1gpu'; submit_config.num_gpus = 1; sched.minibatch_base = 256; sched.minibatch_dict = {4: 512, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8, 512: 4}
+    desc += '-1gpu'; submit_config.num_gpus = 1; sched.minibatch_base = 256; sched.minibatch_dict = {4: 512, 8: 256, 16: 256, 32: 128, 64: 32, 128: 16, 256: 8, 512: 4}
     # desc += '-1gpu'; submit_config.num_gpus = 1; sched.minibatch_base = 256; sched.minibatch_dict = {4: 512, 8: 512, 16: 256, 32: 128, 64: 64, 128: 32, 256: 8, 512: 4}
     #desc += '-2gpu'; submit_config.num_gpus = 2; sched.minibatch_base = 8; sched.minibatch_dict = {4: 256, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16, 256: 8}
     #desc += '-4gpu'; submit_config.num_gpus = 4; sched.minibatch_base = 16; sched.minibatch_dict = {4: 512, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16}
